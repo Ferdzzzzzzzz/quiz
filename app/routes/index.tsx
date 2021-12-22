@@ -1,17 +1,14 @@
-import {useFilterState} from '~/containers/Filter'
+import {PrimaryLink} from '../components/Button'
+import {useFilterState} from '../containers/Filter'
 
 export {Root as default}
 
 function Root() {
-  let selectedFilters = useFilterState()
+  let filterState = useFilterState()
 
   return (
     <div>
-      Content
-      <p>Last word</p>
-      {[...Array(100).keys()].map(i => {
-        return <p>Any</p>
-      })}
+      <PrimaryLink to={'/aasdf'}>Get Started</PrimaryLink>
     </div>
   )
 }

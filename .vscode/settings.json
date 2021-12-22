@@ -1,0 +1,17 @@
+{
+    // "editor.rulers": [80],
+    "workbench.colorCustomizations": {
+        "editorRuler.foreground": "#ff4081"
+    },
+    "editor.fontFamily": "Fira Code",
+    "editor.fontLigatures": true,
+    "files.exclude": {
+        "**/node_modules": true,
+        "**/build": true,
+        "package-lock.json": true,
+        ".prettierrc": true,
+        "remix.env.d.ts": true,
+        ".gitignore": true,
+        ".cache": true
+    }
+}

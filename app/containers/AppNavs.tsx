@@ -1,7 +1,10 @@
 import {DoubleArrowLeftIcon, DoubleArrowRightIcon} from '@radix-ui/react-icons'
 import {Link} from 'remix'
+import {useFilterState} from '~/containers/Filter'
 
 function AppNavs() {
+  let selectedFilters = useFilterState()
+
   return (
     <div className="fixed w-full bottom-0 flex justify-between px-10 py-1 border-t bg-white/70 backdrop-blur-sm z-10">
       <Link

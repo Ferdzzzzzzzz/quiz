@@ -1,9 +1,9 @@
-import {HamburgerMenuIcon} from '@radix-ui/react-icons'
+import {HamburgerMenuIcon, ResetIcon} from '@radix-ui/react-icons'
 import React, {PropsWithChildren} from 'react'
 import {section} from '~/questions/questions'
 import {Dialog, DialogTrigger, DialogContent} from '~/components/Dialog'
 import {Checkbox} from '~/components/Checkbox'
-import {Divider} from '../components/Divider'
+import {PrimaryButton} from '~/components/Button'
 
 type FilterState = {
   selectedSections: 'all' | section[]
@@ -13,10 +13,18 @@ const defaultState: FilterState = {
   selectedSections: 'all',
 }
 
-const FilterContext = React.createContext<undefined | FilterState>(undefined)
+const FilterStateContext = React.createContext<undefined | FilterState>(
+  undefined,
+)
+
+type SetFilterState = (filterState: FilterState | undefined) => FilterState
+
+const SetFilterStateContext = React.createContext<
+  undefined | ((f: SetFilterState) => void)
+>(undefined)
 
 function useFilterState() {
-  let context = React.useContext(FilterContext)
+  let context = React.useContext(FilterStateContext)
 
   if (!context) {
     throw Error('useFilterState can only be used within a FilterProvider')
@@ -25,9 +33,18 @@ function useFilterState() {
   return context
 }
 
-const FilterMenu = () => {
-  let state = useFilterState()
+function useSetFilterState() {
+  let context = React.useContext(SetFilterStateContext)
 
+  if (!context) {
+    throw Error('useSetFilterState can only be used within a FilterProvider')
+  }
+
+  return context
+}
+
+// TODO
+const FilterMenu = () => {
   return (
     <Dialog>
       <div className="fixed px-4 py-2 border-b top-0 left-0 w-full bg-white/70 backdrop-blur-sm flex justify-end">
@@ -38,17 +55,6 @@ const FilterMenu = () => {
       <DialogContent>
         <p className="font-md text-md text-gray-700">Filter</p>
 
-        <button
-          onClick={() => {
-            debugger
-            console.log('clicked RESET')
-          }}
-          className="border border-blue-800 text-blue-800 bg-blue-100 font-semibold text-md px-4 py-2 rounded-lg focus:outline-none focus:ring focus:ring-blue-200"
-        >
-          Reset Filter
-        </button>
-        <Divider />
-
         <div className="space-y-2">
           <Checkbox label="CS" />
           <Checkbox label="History" />
@@ -56,6 +62,16 @@ const FilterMenu = () => {
           <Checkbox label="Sports" />
           <Checkbox label="Words" />
           <Checkbox label="Xhosa" />
+          <PrimaryButton
+            onClick={() => {
+              console.log('clicked RESET')
+            }}
+          >
+            <div className="flex items-center space-x-2">
+              <ResetIcon />
+              <p>Clear</p>
+            </div>
+          </PrimaryButton>
         </div>
       </DialogContent>
     </Dialog>
@@ -63,10 +79,14 @@ const FilterMenu = () => {
 }
 
 function FilterProvider({children}: PropsWithChildren<{}>) {
+  let [state, setState] = React.useState<FilterState>(() => defaultState)
+
   return (
-    <FilterContext.Provider value={defaultState}>
-      {children}
-    </FilterContext.Provider>
+    <SetFilterStateContext.Provider value={setState}>
+      <FilterStateContext.Provider value={state}>
+        {children}
+      </FilterStateContext.Provider>
+    </SetFilterStateContext.Provider>
   )
 }
 
